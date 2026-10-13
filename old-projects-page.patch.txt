@@ -1,0 +1,376 @@
+diff --git a/app/projects/page.js b/app/projects/page.js
+index d77f740..596291d 100644
+--- a/app/projects/page.js
++++ b/app/projects/page.js
+@@ -71,21 +71,77 @@ export default function ProjectsPage() {
+             <div id="backend-infra" className="scroll-mt-20">
+               <h2 className="mb-6 text-center font-display text-3xl font-semibold text-gold-soft">Backend & Infra</h2>
+               <div className="space-y-8">
+-                {/* Transaction Verification */}
++                {/* Query Engine */}
+                 <div className="project-card rounded-xl border border-neutral-800 bg-neutral-950/80 p-8 transition-all hover:border-neutral-700">
+                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                     <div>
+                       <h3 className="font-display text-2xl font-semibold text-gold-soft">
+-                        Transaction Verification and Monitoring System
++                        Query Engine — SQL over Parquet in Object Storage
++                      </h3>
++                      <div className="tech-stack mt-3">
++                        <span className="tech-badge text-sm px-3 py-1.5">Python</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">Django</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">PyArrow</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">Polars</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">Celery</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">S3 / MinIO</span>
++                      </div>
++                    </div>
++                    <a
++                      href="https://github.com/27vamsi/query-engine"
++                      target="_blank"
++                      rel="noreferrer"
++                      className="text-sm font-medium text-gold-soft underline-offset-4 hover:underline"
++                    >
++                      Code →
++                    </a>
++                  </div>
++                  <ul className="mt-6 space-y-3 text-base leading-relaxed text-gold-muted">
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Built an analytical SQL engine that queries Parquet directly in object storage with <strong className="text-gold-soft">no load step</strong>, lowering a sqlglot AST into a logical plan (Scan → Filter → Aggregate → Sort) and executing it over a process pool.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Implemented a three-stage pruning optimizer — partition pruning from path predicates, row-group skipping against Parquet footer min/max statistics, and projection pushdown — cutting a selective query to <strong className="text-gold-soft">0.2% of bytes scanned</strong> by opening 1 of 120 row-groups.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Engineered partial-aggregate parallelism where workers compute independent group-bys and the coordinator merges them, reconstructing <code className="text-gold-soft">AVG</code> as sum-of-sums over sum-of-counts while preserving SQL <code className="text-gold-soft">NULL</code> semantics across the merge.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Instrumented full query observability — files pruned, row-groups skipped, columns projected, and compressed bytes scanned versus total — surfaced per run alongside a Mermaid plan diagram, exposing <em>why</em> a query was cheap rather than just its cost.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Chose the narrowest column from footer metadata for <code className="text-gold-soft">COUNT(*)</code> and partition-only group-bys, reducing I/O <strong className="text-gold-soft">19x</strong> versus reading the first declared column for an identical answer.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Validated correctness by differential testing against DuckDB reading the same files (<strong className="text-gold-soft">35 tests</strong>), with a unified storage abstraction via PyArrow filesystems so local paths and S3/MinIO share one code path.</span>
++                    </li>
++                  </ul>
++                </div>
++
++                {/* vibedeploy */}
++                <div className="project-card rounded-xl border border-neutral-800 bg-neutral-950/80 p-8 transition-all hover:border-neutral-700">
++                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
++                    <div>
++                      <h3 className="font-display text-2xl font-semibold text-gold-soft">
++                        vibedeploy — Deploy Platform with Proven Tenant Isolation & AI Agent Gateway
+                       </h3>
+                       <div className="tech-stack mt-3">
+                         <span className="tech-badge text-sm px-3 py-1.5">Python</span>
+                         <span className="tech-badge text-sm px-3 py-1.5">FastAPI</span>
+-                        <span className="tech-badge text-sm px-3 py-1.5">WebSockets</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">PostgreSQL RLS</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">AWS ECS / IAM</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">MCP</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">CDK</span>
+                       </div>
+                     </div>
+                     <a
+-                      href="https://github.com/27vamsi/merkle-proof"
++                      href="https://github.com/27vamsi/vibedeploy"
+                       target="_blank"
+                       rel="noreferrer"
+                       className="text-sm font-medium text-gold-soft underline-offset-4 hover:underline"
+@@ -96,39 +152,54 @@ export default function ProjectsPage() {
+                   <ul className="mt-6 space-y-3 text-base leading-relaxed text-gold-muted">
+                     <li className="flex items-start gap-3">
+                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
+-                      <span>Built a blockchain transaction verification system using FastAPI, combining Merkle proof generation and multi-signature verification with a unified off-chain and on-chain verification flow.</span>
++                      <span>Built a deploy platform that enforces per-user data isolation in the database rather than application code, so an unfiltered <code className="text-gold-soft">SELECT *</code> still returns only the logged-in user&apos;s rows — using Postgres Row-Level Security with <code className="text-gold-soft">FORCE RLS</code> and <code className="text-gold-soft">NOBYPASSRLS</code> runtime roles.</span>
+                     </li>
+                     <li className="flex items-start gap-3">
+                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
+-                      <span>Designed and deployed Solidity smart contracts for an on-chain verification registry, implementing batch verification to reduce gas costs versus per-transaction validation.</span>
++                      <span>Engineered an automated schema-derivation pipeline that runs migrations in a throwaway database, introspects <code className="text-gold-soft">pg_catalog</code> for FK graphs, and derives RLS policies from templates (owner-column, FK-chain, admin-only) with plain-English confirmation — never guessing silently.</span>
+                     </li>
+                     <li className="flex items-start gap-3">
+                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
+-                      <span>Implemented real-time blockchain monitoring using WebSocket-based event subscriptions and async Python, enabling low-latency detection and processing of on-chain activity.</span>
++                      <span>Implemented an adversarial verification gate that seeds synthetic personas and runs <strong className="text-gold-soft">200+ attacks</strong> per deploy (cross-tenant reads, ownership reassignment, TRUNCATE, view RLS bypass, SECURITY DEFINER escalation), blocking the deploy on any failure and catching <strong className="text-gold-soft">11 classes of planted policy bug</strong> that presence-only scanners pass.</span>
+                     </li>
+                     <li className="flex items-start gap-3">
+                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
+-                      <span>Developed a cryptographic verification pipeline using keccak256-based Merkle trees with sorted-pair optimization and efficient proof construction for transaction inclusion guarantees.</span>
++                      <span>Designed an AI agent gateway granting an agent exactly the access of the person it acts for — typed tools instead of raw SQL or shell, deterministic policy decisions in code (never model-driven), risk scoring, dry-run diffs, diff-hash-bound human approvals, post-execution verification, and undo.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Hardened the gateway to fail closed with a hash-chained tamper-evident audit log (insert/select-only role), sub-second kill switches, token-bucket rate limiting, and audit-before-action ordering so an unwritable log denies execution.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Provisioned per-app AWS isolation with IAM permissions boundaries, <code className="text-gold-soft">PassRole</code> service conditions, and write-only secret access for the deployer, plus 15-minute <code className="text-gold-soft">STS AssumeRole</code> session policies scoped to a single app so cross-app access is refused by AWS itself, not just by platform code.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Shipped an MCP server (Streamable HTTP) alongside a REST API so Claude Code and Cursor connect directly, with <code className="text-gold-soft">tools/list</code> filtered by policy so forbidden tools are never exposed, and a scripted malicious-agent test client proving every escape path is blocked.</span>
+                     </li>
+                   </ul>
+                 </div>
+ 
+-                {/* OCR Enabled Bills Stock Monitoring */}
++                {/* Feature Flags */}
+                 <div className="project-card rounded-xl border border-neutral-800 bg-neutral-950/80 p-8 transition-all hover:border-neutral-700">
+                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                     <div>
+                       <h3 className="font-display text-2xl font-semibold text-gold-soft">
+-                        OCR Enabled Bills Stock Monitoring
++                        Feature Flags & Experimentation Platform
+                       </h3>
+                       <div className="tech-stack mt-3">
+-                        <span className="tech-badge text-sm px-3 py-1.5">React Native</span>
+-                        <span className="tech-badge text-sm px-3 py-1.5">Tesseract</span>
+-                        <span className="tech-badge text-sm px-3 py-1.5">Firebase</span>
+-                        <span className="tech-badge text-sm px-3 py-1.5">Firestore</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">Python</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">FastAPI</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">TypeScript</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">PostgreSQL</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">Redis</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">SSE</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">React</span>
+                       </div>
+                     </div>
+                     <a
+-                      href="https://github.com/27vamsi/Bills-storing-App-"
++                      href="https://github.com/27vamsi/Feature-Flags"
+                       target="_blank"
+                       rel="noreferrer"
+                       className="text-sm font-medium text-gold-soft underline-offset-4 hover:underline"
+@@ -139,45 +210,56 @@ export default function ProjectsPage() {
+                   <ul className="mt-6 space-y-3 text-base leading-relaxed text-gold-muted">
+                     <li className="flex items-start gap-3">
+                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
+-                      <span>Built a React Native bill management app with OCR using Tesseract to extract text from camera or gallery images.</span>
++                      <span>Built a self-hostable feature-flag and A/B experimentation platform where SDKs stream the full ruleset and evaluate <strong className="text-gold-soft">locally in sub-millisecond time</strong>, with <strong className="text-gold-soft">zero per-evaluation server traffic</strong> and flag changes propagating to every connected client in under a second.</span>
+                     </li>
+                     <li className="flex items-start gap-3">
+                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
+-                      <span>Implemented Firebase Authentication with email verification and Firestore for user data storage.</span>
++                      <span>Engineered deterministic bucketing (<code className="text-gold-soft">sha256(flag:salt:user) % 10000</code>) that depends only on flag key, salt, and user key, so raising a rollout from 5% to 10% never reshuffles the original cohort — enforced by a monotonicity test plus uniformity checks across the 10k bucket space.</span>
+                     </li>
+                     <li className="flex items-start gap-3">
+                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
+-                      <span>Developed CRUD operations for bills with image capture, text extraction, and full-screen image viewing.</span>
++                      <span>Implemented multi-replica streaming propagation over SSE with Redis pub/sub fan-out, where every connection&apos;s first frame is the full current snapshot — making reconnect catch-up free regardless of how many updates a client missed — with a polling endpoint as fallback.</span>
+                     </li>
+                     <li className="flex items-start gap-3">
+                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
+-                      <span>Integrated React Navigation with protected routes and conditional rendering based on authentication state.</span>
++                      <span>Proved cross-language consistency by running one shared test-vector suite across the Python server, Python SDK, and TypeScript SDK as a CI gate, shipping a synchronous SHA-256 in TypeScript that produces byte-identical digests to Python&apos;s <code className="text-gold-soft">hashlib</code>.</span>
+                     </li>
+                     <li className="flex items-start gap-3">
+                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
+-                      <span>Added camera and gallery permissions handling with image picker integration for bill capture workflows.</span>
++                      <span>Designed immutable ruleset versioning where every save creates a new version and rollback atomically repoints the flag, so no data is rewritten and any past evaluation decision stays perfectly reproducible.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Built the experiment stats engine with a two-proportion z-test for conversion and Welch&apos;s t-test for continuous metrics, validated against SciPy on known datasets and surfacing p-values, confidence intervals, and explicit peeking/sample-size caveats.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Instrumented Prometheus metrics with deliberately bounded label cardinality — route templates instead of raw paths, unmatched requests collapsed to a sentinel, and truncated evaluation reasons — so internet scanners cannot mint unbounded time series, enforced by tests.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Separated admin and SDK bearer tokens with constant-time comparison so the browser-public read token cannot grant writes, and containerized the full stack (Postgres, Redis, API, worker, UI, Caddy with automatic HTTPS) behind a single <code className="text-gold-soft">docker compose up</code>.</span>
+                     </li>
+                   </ul>
+                 </div>
+ 
+-                {/* Blogging App */}
++                {/* Adverse Selection Pipeline */}
+                 <div className="project-card rounded-xl border border-neutral-800 bg-neutral-950/80 p-8 transition-all hover:border-neutral-700">
+                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                     <div>
+                       <h3 className="font-display text-2xl font-semibold text-gold-soft">
+-                        Blogging App
++                        Empirical Adverse Selection Pipeline
+                       </h3>
+                       <div className="tech-stack mt-3">
+-                        <span className="tech-badge text-sm px-3 py-1.5">Node.js</span>
+-                        <span className="tech-badge text-sm px-3 py-1.5">Express.js</span>
+-                        <span className="tech-badge text-sm px-3 py-1.5">MongoDB</span>
+-                        <span className="tech-badge text-sm px-3 py-1.5">EJS</span>
+-                        <span className="tech-badge text-sm px-3 py-1.5">JWT</span>
+-                        <span className="tech-badge text-sm px-3 py-1.5">Multer</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">Python</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">Polars</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">Parquet</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">WebSockets</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">Make</span>
+                       </div>
+                     </div>
+                     <a
+-                      href="https://github.com/27vamsi/blogging-application"
++                      href="https://github.com/27vamsi/adverse-selection-pipeline"
+                       target="_blank"
+                       rel="noreferrer"
+                       className="text-sm font-medium text-gold-soft underline-offset-4 hover:underline"
+@@ -188,40 +270,45 @@ export default function ProjectsPage() {
+                   <ul className="mt-6 space-y-3 text-base leading-relaxed text-gold-muted">
+                     <li className="flex items-start gap-3">
+                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
+-                      <span>Built a full-stack blogging platform using Node.js, Express.js, and MongoDB with JWT-based authentication, implementing secure password hashing via HMAC-SHA256 with salt, role-based access control (USER/ADMIN), and cookie-based session management for user authentication and authorization.</span>
++                      <span>Built a reproducible market-microstructure research pipeline quantifying how far price moves against a market maker after a passive fill, measured in basis points across <strong className="text-gold-soft">six horizons</strong> from 1s to 300s.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Engineered a checksum-verified ingestion layer for Binance monthly aggTrades with Parquet conversion, plus two reference-price modes — a smoothed trade-derived mid and a stricter bookTicker mid with crossed and wide-spread filtering.</span>
+                     </li>
+                     <li className="flex items-start gap-3">
+                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
+-                      <span>Developed a content management system with Multer for image uploads, MongoDB population for relational data queries, and server-side rendering using EJS templates with partials, enabling users to create, view, and manage blog posts with cover images.</span>
++                      <span>Conditioned results by trade size, volatility regime, and hour-of-day, reporting only cells with <strong className="text-gold-soft">n ≥ 100</strong> in headline curves and exporting confidence intervals and data-quality coverage tables alongside every figure.</span>
+                     </li>
+                     <li className="flex items-start gap-3">
+                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
+-                      <span>Implemented a real-time commenting system with user associations and timestamps, utilizing Mongoose schema relationships and population to link comments to blogs and authors, creating an interactive user engagement feature.</span>
++                      <span>Implemented a live WebSocket validator against Binance trade and book streams producing rolling per-horizon statistics, including dropped-trade counts from missing or stale mids so offline results can be sanity-checked in real time.</span>
+                     </li>
+                     <li className="flex items-start gap-3">
+                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
+-                      <span>Architected a production-ready application with environment variable configuration using dotenv, dynamic port assignment for cloud deployment, static file serving middleware, and MVC pattern separation across routes, controllers, models, and authentication services.</span>
++                      <span>Made the whole study deterministic and CI-gated with a Make-driven pipeline, a figure-reproducibility check (<code className="text-gold-soft">make verify-figures</code>), and unit tests covering the adverse-selection math and edge cases.</span>
+                     </li>
+                   </ul>
+                 </div>
+ 
+-                {/* URL Shortener */}
++                {/* Trade Reconciliation Engine */}
+                 <div className="project-card rounded-xl border border-neutral-800 bg-neutral-950/80 p-8 transition-all hover:border-neutral-700">
+                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                     <div>
+                       <h3 className="font-display text-2xl font-semibold text-gold-soft">
+-                        URL Shortener
++                        Multi-Exchange Trade Reconciliation Engine
+                       </h3>
+                       <div className="tech-stack mt-3">
+-                        <span className="tech-badge text-sm px-3 py-1.5">Node.js</span>
+-                        <span className="tech-badge text-sm px-3 py-1.5">Express.js</span>
+-                        <span className="tech-badge text-sm px-3 py-1.5">MongoDB</span>
+-                        <span className="tech-badge text-sm px-3 py-1.5">EJS</span>
+-                        <span className="tech-badge text-sm px-3 py-1.5">JWT</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">Python</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">FastAPI</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">SQLAlchemy Async</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">PostgreSQL</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">SSE</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">Next.js</span>
+                       </div>
+                     </div>
+                     <a
+-                      href="https://github.com/27vamsi/URL-SHORTNER"
++                      href="https://github.com/27vamsi/Trade-Reconciliation-Engine"
+                       target="_blank"
+                       rel="noreferrer"
+                       className="text-sm font-medium text-gold-soft underline-offset-4 hover:underline"
+@@ -232,19 +319,90 @@ export default function ProjectsPage() {
+                   <ul className="mt-6 space-y-3 text-base leading-relaxed text-gold-muted">
+                     <li className="flex items-start gap-3">
+                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
+-                      <span>Developed a full-stack URL shortener using Node.js, Express.js, and MongoDB, implementing RESTful APIs with cookie-based JWT authentication and role-based authorization (NORMAL/ADMIN) to secure user-specific URL management.</span>
++                      <span>Built an async reconciliation system ingesting internal trade intents and exchange fills across <strong className="text-gold-soft">Binance, Coinbase, and Kraken</strong>, matching them in near-real-time and classifying each as matched, partial, unmatched, or flagged for operational risk control.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Chose Postgres-as-event-log over Kafka to cut operational overhead at this scale, persisting raw exchange payloads for replay and audit so parser changes can be applied retroactively without data loss.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Enforced exactly-once fill ingestion with database-level idempotency via unique constraints on <code className="text-gold-soft">intent_id</code> and <code className="text-gold-soft">(exchange, exchange_event_id)</code>, and used <code className="text-gold-soft">NUMERIC(36,18)</code> decimals throughout for financial precision.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Designed an asymmetric matching window to absorb clock skew and delayed exchange reporting, surfacing discrepancy alerts and consolidated positions through a documented REST surface.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Implemented an exchange supervisor with retry, token-bucket rate limiting, and circuit-breaker guards, degrading to simulated mode when credentials are absent, plus an SSE stream pushing live ingestion and error events to a Next.js dashboard.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Instrumented liveness and readiness probes, Prometheus metrics, and a matcher latency benchmark reporting p50/p95, with migrations run as an explicit release step rather than on startup for safe production deploys.</span>
++                    </li>
++                  </ul>
++                </div>
++
++                {/* Multiplayer Tic-Tac-Toe */}
++                <div className="project-card rounded-xl border border-neutral-800 bg-neutral-950/80 p-8 transition-all hover:border-neutral-700">
++                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
++                    <div>
++                      <h3 className="font-display text-2xl font-semibold text-gold-soft">
++                        Real-Time Multiplayer Game Server
++                      </h3>
++                      <div className="tech-stack mt-3">
++                        <span className="tech-badge text-sm px-3 py-1.5">TypeScript</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">Nakama</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">WebSockets</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">PostgreSQL</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">React</span>
++                        <span className="tech-badge text-sm px-3 py-1.5">Docker</span>
++                      </div>
++                    </div>
++                    <div className="flex items-center gap-4">
++                      <a
++                        href="https://github.com/27vamsi/tic-tac-toe-game"
++                        target="_blank"
++                        rel="noreferrer"
++                        className="text-sm font-medium text-gold-soft underline-offset-4 hover:underline"
++                      >
++                        Code →
++                      </a>
++                      <a
++                        href="http://13.62.102.36/"
++                        target="_blank"
++                        rel="noreferrer"
++                        className="text-sm font-medium text-gold-soft underline-offset-4 hover:underline"
++                      >
++                        Live →
++                      </a>
++                    </div>
++                  </div>
++                  <ul className="mt-6 space-y-3 text-base leading-relaxed text-gold-muted">
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Built a server-authoritative real-time multiplayer game on Nakama&apos;s TypeScript runtime where clients send only intents and the server validates every move (bounds, cell availability, turn order) before broadcasting state over WebSocket — making client-side state manipulation impossible.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Implemented the authoritative match lifecycle (init, join, leave, loop, terminate) with a <strong className="text-gold-soft">5 Hz match loop</strong> driving idle warnings and automatic forfeits, supporting concurrent isolated matches with independent state.</span>
++                    </li>
++                    <li className="flex items-start gap-3">
++                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
++                      <span>Designed matchmaking and room discovery RPCs plus a timed game mode with per-move countdowns, awarding the win to the remaining player on mid-game disconnect and clearing pending rematch requests.</span>
+                     </li>
+                     <li className="flex items-start gap-3">
+                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
+-                      <span>Built analytics tracking with MongoDB aggregation, capturing visit timestamps and click counts per shortened URL, enabling users to monitor link performance in real time.</span>
++                      <span>Chose in-place match reset for rematches over creating a new match, avoiding cross-match coordination and keeping both players on the same WebSocket connection while swapping marks for fairness.</span>
+                     </li>
+                     <li className="flex items-start gap-3">
+                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
+-                      <span>Implemented server-side rendering with EJS templates and Express middleware, creating a responsive web interface for URL generation, user authentication, and dashboard views.</span>
++                      <span>Persisted leaderboard rankings and player statistics (wins, losses, draws, streaks) in PostgreSQL so they survive restarts, and added client auto-reconnection with session recovery on socket drop.</span>
+                     </li>
+                     <li className="flex items-start gap-3">
+                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-gold-soft/60" />
+-                      <span>Architected a scalable MVC application with nanoid-based unique ID generation, MongoDB schema design with referential integrity, and middleware-based authentication flow, supporting user registration, login, and protected route access.</span>
++                      <span>Containerized and deployed the full stack with environment-driven configuration (session encryption keys, token expiry, WebSocket allowed origins) and SSL-enforced managed Postgres in production.</span>
+                     </li>
+                   </ul>
+                 </div>

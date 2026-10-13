@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx next:*)",
+      "Bash(node -e \":*)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(tee /tmp/nextdev.log)",
+      "Bash(curl -s -o /tmp/proj.html -w \"%{http_code}\\\\n\" http://localhost:3000/projects)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000)",
+      "Bash(curl -s -o /tmp/dev.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3001)",
+      "Read(//tmp/**)",
+      "Bash(curl:*)",
+      "Bash(netstat -ano)",
+      "Bash(taskkill //PID 26012 //F)",
+      "Bash(cd:*)",
+      "Bash(taskkill //PID 25316 //F)",
+      "Bash(python -c \":*)",
+      "Bash(python -:*)",
+      "Bash(python -c \"import playwright; print\\(''''py-playwright ok''''\\)\")",
+      "Bash(node:*)",
+      "Bash(taskkill //PID 12468 //F)",
+      "Read(//c/Users/vamsi/.claude/projects/C--Users-vamsi-vamsi-portfolio/memory/**)",
+      "Bash(wc -l /c/Users/vamsi/vamsi-portfolio/app/globals.css /c/Users/vamsi/vamsi-portfolio/app/page.js /c/Users/vamsi/vamsi-portfolio/app/components/*.js)"
+    ]
+  }
+}

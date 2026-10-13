@@ -1,0 +1,774 @@
+<title>Vamsi Marella</title>
+<style>
+  /* Layout: editorial single column, layered elevation; deep midnight navy base, antique gold accent.
+     Display serif at large sizes (Newsreader); grotesque UI (Archivo); data mono (Spline Sans Mono). */
+  :root {
+    --bg: #060C15;
+    --bg-2: #0A1221;          /* banded section background */
+    --surface: #0F1B2D;       /* card at rest */
+    --surface-2: #152539;     /* card hover / raised */
+    --fg: #F2F0E9;
+    --muted: #7E8CA2;
+    --faint: rgba(242,240,233,0.09);
+    --faint-2: rgba(242,240,233,0.045);
+    --line-strong: rgba(242,240,233,0.17);
+    --accent: #B69A65;
+    --accent-bright: #E0C690;
+    --accent-dim: rgba(182,154,101,0.13);
+    --accent-deep: #8A713F;
+    --on-accent: #060C15;
+    --ok: #86B48C;
+    --fg-soft: #C6CCD8;
+    --sh-1: 0 2px 10px -3px rgba(0,0,0,0.65);
+    --sh-2: 0 22px 50px -20px rgba(0,0,0,0.82);
+    --hi: inset 0 1px 0 rgba(255,255,255,0.045);
+    color-scheme: dark;
+
+    --display: "Newsreader", Georgia, "Times New Roman", serif;
+    --sans: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "Spline Sans Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+    --wrap: 1140px;
+    --gutter: clamp(20px, 5vw, 64px);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #F2F0E9; --bg-2: #EAE7DC; --surface: #FFFFFF; --surface-2: #FBFAF3;
+      --fg: #0A1221; --muted: #5A6577;
+      --faint: rgba(10,18,33,0.12); --faint-2: rgba(10,18,33,0.05); --line-strong: rgba(10,18,33,0.2);
+      --accent: #8A6F3C; --accent-bright: #6E5729; --accent-dim: rgba(138,111,60,0.12); --accent-deep: #6E5729;
+      --on-accent: #FFFFFF; --ok: #3F8F55; --fg-soft: #39414F;
+      --sh-1: 0 2px 10px -4px rgba(20,30,50,0.14); --sh-2: 0 22px 50px -20px rgba(20,30,50,0.22);
+      --hi: inset 0 1px 0 rgba(255,255,255,0.85);
+      color-scheme: light;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #F2F0E9; --bg-2: #EAE7DC; --surface: #FFFFFF; --surface-2: #FBFAF3;
+    --fg: #0A1221; --muted: #5A6577;
+    --faint: rgba(10,18,33,0.12); --faint-2: rgba(10,18,33,0.05); --line-strong: rgba(10,18,33,0.2);
+    --accent: #8A6F3C; --accent-bright: #6E5729; --accent-dim: rgba(138,111,60,0.12); --accent-deep: #6E5729;
+    --on-accent: #FFFFFF; --ok: #3F8F55; --fg-soft: #39414F;
+    --sh-1: 0 2px 10px -4px rgba(20,30,50,0.14); --sh-2: 0 22px 50px -20px rgba(20,30,50,0.22);
+    --hi: inset 0 1px 0 rgba(255,255,255,0.85);
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background:
+      radial-gradient(1100px 600px at 82% -16%, var(--accent-dim), transparent 56%),
+      var(--bg);
+    color: var(--fg);
+    font-family: var(--sans); font-size: 16px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  ::selection { background: var(--accent-dim); color: var(--fg); }
+
+  .wrap { max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gutter); }
+  .kicker { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); display: inline-block; }
+  h1, h2 { font-family: var(--display); font-weight: 400; text-wrap: balance; margin: 0; }
+  h3 { font-family: var(--sans); font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+
+  /* NAV */
+  header.nav {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--faint);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 15px; }
+  .brand { display: inline-flex; align-items: center; gap: 12px; font-family: var(--display); font-size: 1.15rem; font-style: italic; }
+  .nav-links { display: flex; align-items: center; gap: 26px; }
+  .nav-links a { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); transition: color 0.2s; }
+  .nav-links a:hover { color: var(--fg); }
+  .theme-btn {
+    background: var(--surface); border: 1px solid var(--faint); color: var(--muted);
+    width: 36px; height: 36px; border-radius: 50%; cursor: pointer; box-shadow: var(--sh-1);
+    display: grid; place-items: center; transition: border-color 0.2s, color 0.2s;
+  }
+  .theme-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .theme-btn svg { width: 16px; height: 16px; }
+  @media (max-width: 820px) { .nav-links { display: none; } }
+
+  /* HERO */
+  .hero { padding-block: clamp(40px, 7vw, 80px) clamp(28px, 5vw, 56px); }
+  .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 4vw, 48px); align-items: center; }
+  .hero-role { margin-bottom: 20px; }
+  .hero h1 { font-size: clamp(2.5rem, 6.6vw, 4.6rem); line-height: 1.04; letter-spacing: -0.01em; }
+  .hero h1 .lead { color: var(--muted); display: block; font-size: 0.38em; letter-spacing: 0; margin-bottom: 0.55em; font-style: italic; }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .statement { font-family: var(--display); font-style: italic; font-size: clamp(1.35rem, 3.4vw, 2.05rem); color: var(--fg); margin-top: 20px; line-height: 1.15; }
+  .statement em { font-style: italic; color: var(--accent); }
+  .hero-lede { margin-top: 18px; max-width: 46ch; font-size: 1.05rem; }
+  .hero-lede span { color: var(--muted); }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+  .btn {
+    font-family: var(--mono); font-size: 0.76rem; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 13px 22px; border-radius: 3px; cursor: pointer; border: 1px solid var(--accent);
+    transition: all 0.2s; display: inline-flex; align-items: center; gap: 10px; background: none; color: var(--fg);
+  }
+  .btn.primary { background: var(--accent); color: var(--on-accent); box-shadow: 0 8px 22px -10px var(--accent); }
+  .btn.primary:hover { background: var(--accent-bright); border-color: var(--accent-bright); }
+  .btn.ghost:hover { background: var(--accent-dim); border-color: var(--accent); }
+
+  /* CONSTELLATION MAP (no container box) */
+  .map-wrap { position: relative; aspect-ratio: 1 / 0.98; }
+  .map-wrap svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  .map-hint { position: absolute; bottom: 4px; right: 4px; font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); opacity: 0.7; pointer-events: none; }
+  .cedge { stroke: var(--line-strong); stroke-width: 1; }
+  .cdeco { fill: var(--accent); }
+  .cnode { cursor: pointer; }
+  .cnode .halo { fill: url(#nglow); }
+  .cnode .pt { fill: var(--accent-bright); }
+  .cnode .ring { fill: none; stroke: var(--accent); opacity: 0.35; stroke-width: 1; transition: opacity 0.2s, stroke-width 0.2s; }
+  .cnode text { fill: var(--fg); font-family: var(--mono); letter-spacing: 0.07em; text-transform: uppercase; transition: fill 0.2s; paint-order: stroke; }
+  .cnode:hover .ring, .cnode:focus-visible .ring { opacity: 0.85; stroke-width: 2; }
+  .cnode:hover text, .cnode:focus-visible text { fill: var(--accent-bright); }
+  .cnode:focus { outline: none; }
+  @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; } .map-wrap { aspect-ratio: 16 / 12; order: -1; margin-block: 8px; } }
+
+  /* STATUS STRIP */
+  .status { border-top: 1px solid var(--faint); border-bottom: 1px solid var(--faint); margin-top: clamp(28px, 5vw, 52px); background: var(--bg-2); }
+  .status-inner { display: flex; flex-wrap: wrap; gap: 8px 40px; padding-block: 17px; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.04em; color: var(--muted); }
+  .status-inner span b { color: var(--fg); font-weight: 500; }
+  .status-inner .live b { color: var(--ok); }
+  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); margin-right: 8px; vertical-align: middle; box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 22%, transparent); animation: pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* SECTION SHELL + banding */
+  section.block { padding-block: clamp(50px, 7vw, 86px); }
+  section.band { background: var(--bg-2); border-top: 1px solid var(--faint); border-bottom: 1px solid var(--faint); }
+  .block-head { margin-bottom: clamp(28px, 4.5vw, 44px); }
+  .block-head h2 { font-size: clamp(2rem, 4.6vw, 3rem); line-height: 1.08; letter-spacing: -0.01em; }
+  .block-head p { color: var(--muted); max-width: 58ch; margin-top: 14px; }
+
+  /* FOCUS CARDS */
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--faint); border-radius: 10px;
+    padding: clamp(24px, 3vw, 32px); display: flex; flex-direction: column; gap: 15px;
+    box-shadow: var(--sh-1), var(--hi); transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s, background 0.25s;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: var(--sh-2), var(--hi); border-color: var(--line-strong); background: var(--surface-2); }
+  .card .num { font-family: var(--mono); font-size: 0.72rem; color: var(--accent); letter-spacing: 0.1em; }
+  .card h3 { font-size: 1.4rem; }
+  .card p { color: var(--muted); font-size: 0.95rem; margin: 0; }
+  .card ul { margin: 4px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .card li { font-family: var(--mono); font-size: 0.74rem; color: var(--fg); padding-left: 16px; position: relative; }
+  .card li::before { content: "→"; position: absolute; left: 0; color: var(--accent); }
+  @media (max-width: 760px) { .cards { grid-template-columns: 1fr; } }
+
+  /* PROJECTS */
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; }
+  .filter {
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 9px 16px; border: 1px solid var(--faint); border-radius: 3px; background: var(--surface);
+    color: var(--muted); cursor: pointer; transition: all 0.2s; box-shadow: var(--sh-1);
+  }
+  .filter:hover { color: var(--fg); border-color: var(--accent); }
+  .filter.active { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .filter .n { opacity: 0.6; margin-left: 6px; }
+
+  /* Projects as a typeset engineering archive — stacked, equal weight, thin dividers */
+  .grid { display: flex; flex-direction: column; max-width: 1000px; }
+  .proj { padding-block: clamp(42px, 6vw, 68px); border-top: 1px solid var(--faint); }
+  .proj:first-child { border-top: none; padding-top: clamp(8px, 1.5vw, 16px); }
+  .p-eyebrow { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+  .p-eyebrow .pnum { color: var(--muted); }
+  .p-title { font-family: var(--display); font-weight: 400; font-size: clamp(2.1rem, 4.6vw, 2.9rem); line-height: 1.05; letter-spacing: -0.01em; margin-top: 14px; }
+  .p-what { font-size: clamp(1.05rem, 1.5vw, 1.18rem); line-height: 1.55; color: var(--fg-soft); max-width: 64ch; margin-top: 18px; }
+  .p-standout {
+    font-family: var(--display); font-weight: 500; font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+    line-height: 1.3; color: var(--accent); max-width: 42ch; margin-top: 26px;
+    padding-left: 20px; border-left: 2px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  .p-stack { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 26px; }
+  .p-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+  @media (max-width: 560px) { .p-standout { padding-left: 15px; } }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 4px; }
+  .chip { font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.03em; color: var(--muted); border: 1px solid var(--faint); background: var(--bg-2); padding: 4px 9px; border-radius: 3px; }
+
+  /* EXPERIENCE */
+  .xp { display: flex; flex-direction: column; }
+  .xp-row { display: grid; grid-template-columns: 170px 1fr; gap: clamp(16px, 4vw, 44px); padding-block: clamp(24px, 3.4vw, 38px); border-top: 1px solid var(--faint); }
+  .xp-row:last-child { border-bottom: 1px solid var(--faint); }
+  .xp-when { font-family: var(--mono); font-size: 0.76rem; color: var(--muted); letter-spacing: 0.02em; }
+  .xp-when .now { color: var(--ok); }
+  .xp-body h3 { font-size: 1.4rem; }
+  .xp-body .org { font-family: var(--mono); font-size: 0.8rem; color: var(--accent); letter-spacing: 0.04em; margin-top: 6px; }
+  .xp-body p { color: var(--muted); margin: 13px 0 0; max-width: 62ch; }
+  .xp-body .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
+  .tag { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--faint); padding: 4px 10px; border-radius: 3px; }
+  @media (max-width: 640px) { .xp-row { grid-template-columns: 1fr; gap: 10px; } }
+
+  /* STACK */
+  .stack { display: grid; grid-template-columns: repeat(2, 1fr); gap: 34px 54px; }
+  .stack-col h3 { font-family: var(--mono); font-weight: 400; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 15px; }
+  .stack-col .chips { margin-top: 0; }
+  .stack-col .chip { font-size: 0.82rem; padding: 7px 13px; color: var(--fg); background: var(--surface); box-shadow: var(--sh-1); }
+  .stack-col .chip:hover { border-color: var(--accent); }
+  @media (max-width: 640px) { .stack { grid-template-columns: 1fr; gap: 26px; } }
+
+  /* PUBLICATION + EDUCATION */
+  .split { display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(22px, 4vw, 44px); }
+  .panel { border: 1px solid var(--faint); border-radius: 12px; padding: clamp(24px, 3.2vw, 36px); background: var(--surface); box-shadow: var(--sh-2), var(--hi); }
+  .panel .kicker { margin-bottom: 16px; }
+  .panel h3 { font-size: 1.3rem; line-height: 1.25; }
+  .panel p { color: var(--muted); margin: 13px 0 0; font-size: 0.93rem; }
+  .panel .meta { font-family: var(--mono); font-size: 0.72rem; color: var(--fg); margin-top: 16px; letter-spacing: 0.02em; padding-top: 14px; border-top: 1px solid var(--faint); }
+  .panel .meta b { color: var(--accent); font-weight: 400; }
+  .edu-list { display: flex; flex-direction: column; gap: 16px; }
+  .edu-item { padding-bottom: 16px; border-bottom: 1px solid var(--faint); }
+  .edu-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .edu-item h3 { font-size: 1.1rem; }
+  .edu-item .sub { color: var(--muted); font-size: 0.88rem; margin-top: 3px; }
+  .edu-item .yr { font-family: var(--mono); font-size: 0.69rem; color: var(--accent); letter-spacing: 0.03em; margin-top: 5px; }
+  @media (max-width: 720px) { .split { grid-template-columns: 1fr; } }
+
+  /* CONTACT */
+  .contact-inner { padding-block: clamp(60px, 9vw, 108px); text-align: center; }
+  .contact h2 { font-size: clamp(2.1rem, 5.6vw, 3.7rem); line-height: 1.06; letter-spacing: -0.01em; }
+  .contact h2 em { font-style: italic; color: var(--accent); }
+  .contact p { color: var(--muted); margin: 18px auto 0; max-width: 48ch; }
+  .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-top: 38px; text-align: left; }
+  .cc { display: flex; align-items: center; gap: 14px; padding: 16px 18px; border: 1px solid var(--faint); border-radius: 10px; background: var(--surface); box-shadow: var(--sh-1), var(--hi); transition: border-color 0.2s, transform 0.2s; }
+  .cc:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .cc svg { width: 20px; height: 20px; color: var(--accent); flex-shrink: 0; }
+  .cc .lab { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .cc .val { font-family: var(--mono); font-size: 0.85rem; color: var(--fg); user-select: all; overflow-wrap: anywhere; }
+  .cc .copy { margin-left: auto; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--faint); background: var(--bg-2); border-radius: 3px; padding: 5px 9px; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+  .cc .copy:hover { color: var(--accent); border-color: var(--accent); }
+  .cc .min { min-width: 0; }
+
+  footer.foot { border-top: 1px solid var(--faint); background: var(--bg-2); }
+  .foot-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; padding-block: 24px; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; }
+
+  @media (prefers-reduced-motion: reduce) { .dot { animation: none; } html { scroll-behavior: auto; } }
+  html { scroll-behavior: smooth; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+</style>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top" aria-label="Home">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <circle cx="4" cy="11" r="2.4" fill="var(--accent)"/>
+        <circle cx="18" cy="5" r="1.8" fill="var(--muted)"/>
+        <circle cx="18" cy="17" r="1.8" fill="var(--muted)"/>
+        <path d="M6 10L16 5.5M6 12L16 16.5" stroke="var(--accent)" stroke-width="1" opacity="0.6"/>
+      </svg>
+      <span>Vamsi&nbsp;Marella</span>
+    </a>
+    <button class="theme-btn" id="themeToggle" aria-label="Toggle light and dark theme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" id="themeIcon">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-text">
+        <div class="hero-role kicker">Backend Engineer · AI Systems · Web3</div>
+        <h1>
+          <span class="lead">Sesha Sai</span>
+          <em>Vamsi</em> Marella
+        </h1>
+        <p class="statement">I build the <em>complicated</em> parts.</p>
+        <p class="hero-lede">
+          I've built trading engines, backend APIs, data pipelines, and blockchain infrastructure. <span>I enjoy taking things from an empty repository to a working product, then making them faster, cheaper, and better.</span>
+        </p>
+        <div class="cta-row">
+          <a class="btn primary" href="#work">See what I've built</a>
+          <a class="btn ghost" href="#contact">Get in touch</a>
+        </div>
+      </div>
+
+      <div class="map-wrap">
+        <svg id="constel" viewBox="0 0 600 588" role="img" aria-label="A drifting 3D network map of this site. Each glowing point links to a section: Focus, Work, Experience, Stack, Research, and Contact.">
+          <defs>
+            <radialGradient id="nglow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.55"/>
+              <stop offset="55%" stop-color="var(--accent)" stop-opacity="0.14"/>
+              <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+        </svg>
+        <span class="map-hint">Tap a point to explore</span>
+      </div>
+    </div>
+
+    <div class="status">
+      <div class="wrap status-inner">
+        <span class="live"><span class="dot"></span><b>Open to new roles</b></span>
+        <span><b>Hyderabad, India</b> · open to remote &amp; relocation</span>
+        <span>Now <b>OneCent Labs</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOCUS -->
+  <section class="block" id="focus">
+    <div class="wrap">
+      <div class="block-head">
+        <h2>What I bring to the table</h2>
+        <p>Most of my work has been behind the scenes: the APIs, execution engines, databases, and infrastructure that make a product work.</p>
+      </div>
+      <div class="cards">
+        <div class="card">
+          <span class="num">A.</span>
+          <h3>Backend &amp; Infrastructure</h3>
+          <p>I've built APIs, query engines, and transaction systems from scratch. Concurrency, caching, databases, cloud infrastructure, and the occasional production bug that takes an entire day to find.</p>
+          <ul>
+            <li>Python, FastAPI, asyncio</li>
+            <li>PostgreSQL, Redis, AWS</li>
+            <li>Query engines &amp; data pipelines</li>
+            <li>Concurrency &amp; performance</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="num">B.</span>
+          <h3>Web3 &amp; Blockchain</h3>
+          <p>I spent a good part of my engineering career on DeFi infrastructure. Not just interacting with smart contracts, but building the systems that find routes, calculate prices, execute trades, and talk to liquidity pools.</p>
+          <ul>
+            <li>DEX aggregators &amp; trade routing</li>
+            <li>Solidity, EVM &amp; smart contracts</li>
+            <li>Protocol AMM &amp; yield logic</li>
+            <li>Cross-chain execution infra</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="num">C.</span>
+          <h3>AI &amp; Research</h3>
+          <p>I've worked on machine learning and computer vision, from experimenting with model architectures to implementing inference systems. I also have experience with academic research.</p>
+          <ul>
+            <li>Machine learning &amp; neural nets</li>
+            <li>Computer vision</li>
+            <li>Model inference</li>
+            <li>Academic research</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section class="block band" id="work">
+    <div class="wrap">
+      <div class="block-head">
+        <h2>Things I've built</h2>
+      </div>
+
+      <div class="filters" id="filters">
+        <button class="filter active" data-filter="all">All <span class="n" id="n-all"></span></button>
+        <button class="filter" data-filter="infra">Backend &amp; Infra <span class="n" id="n-infra"></span></button>
+        <button class="filter" data-filter="chain">Blockchain <span class="n" id="n-chain"></span></button>
+        <button class="filter" data-filter="ai">AI &amp; ML <span class="n" id="n-ai"></span></button>
+      </div>
+
+      <div class="grid" id="grid">
+        <article class="proj" data-cat="infra">
+          <div class="p-eyebrow"><span class="pnum">01</span> / Data Engineering</div>
+          <h3 class="p-title">Query Engine</h3>
+          <p class="p-what">A SQL engine that queries Parquet files directly from cloud storage, without importing the data into a database first.</p>
+          <p class="p-standout">Scanned just 0.2% of the data using three layers of query optimization. Same answer, 99.8% less data scanned.</p>
+          <div class="p-stack">Python · Django · PyArrow · Polars · Celery · S3 / MinIO</div>
+          <div class="p-cta"><a class="btn primary" href="https://github.com/27vamsi" target="_blank" rel="noopener">Checkout code ↗</a></div>
+        </article>
+
+        <article class="proj" data-cat="infra">
+          <div class="p-eyebrow"><span class="pnum">02</span> / Cloud Infrastructure &amp; Security</div>
+          <h3 class="p-title">VibeDeploy</h3>
+          <p class="p-what">A deployment platform that automatically isolates each customer's data, tests for security gaps, and controls what AI agents can access.</p>
+          <p class="p-standout">200+ simulated attacks before every deploy. Even a forgotten database filter can't expose another customer's data.</p>
+          <div class="p-stack">Python · FastAPI · PostgreSQL RLS · AWS ECS · IAM · MCP · CDK</div>
+          <div class="p-cta"><a class="btn primary" href="https://github.com/27vamsi" target="_blank" rel="noopener">Checkout code ↗</a></div>
+        </article>
+
+        <article class="proj" data-cat="infra">
+          <div class="p-eyebrow"><span class="pnum">03</span> / Backend Infrastructure</div>
+          <h3 class="p-title">Feature Flags &amp; Experimentation</h3>
+          <p class="p-what">A system for rolling out features, running A/B experiments, and changing application behavior without redeploying code.</p>
+          <p class="p-standout">Sub-millisecond decisions, zero server calls per evaluation, and feature updates delivered in under a second.</p>
+          <div class="p-stack">Python · FastAPI · PostgreSQL · Redis · SSE · TypeScript</div>
+          <div class="p-cta"><a class="btn primary" href="https://github.com/27vamsi" target="_blank" rel="noopener">Checkout code ↗</a></div>
+        </article>
+
+        <article class="proj" data-cat="infra">
+          <div class="p-eyebrow"><span class="pnum">04</span> / Quantitative Systems</div>
+          <h3 class="p-title">Adverse Selection Pipeline</h3>
+          <p class="p-what">A research pipeline that measures how prices move against market makers after their orders get filled.</p>
+          <p class="p-standout">From raw exchange trades to a reproducible market-risk study, across six time horizons from 1 to 300 seconds.</p>
+          <div class="p-stack">Python · Polars · Parquet · WebSockets</div>
+          <div class="p-cta"><a class="btn primary" href="https://github.com/27vamsi" target="_blank" rel="noopener">Checkout code ↗</a></div>
+        </article>
+
+        <article class="proj" data-cat="infra">
+          <div class="p-eyebrow"><span class="pnum">05</span> / Financial Infrastructure</div>
+          <h3 class="p-title">Multi-Exchange Trade Reconciliation</h3>
+          <p class="p-what">Matches internal trades against actual exchange fills across Binance, Coinbase, and Kraken to detect missing, partial, or suspicious executions.</p>
+          <p class="p-standout">Database-enforced duplicate protection, replayable exchange events, and live discrepancy detection across three exchanges.</p>
+          <div class="p-stack">Python · FastAPI · PostgreSQL · SQLAlchemy · SSE · Next.js</div>
+          <div class="p-cta"><a class="btn primary" href="https://github.com/27vamsi" target="_blank" rel="noopener">Checkout code ↗</a></div>
+        </article>
+
+        <article class="proj" data-cat="infra">
+          <div class="p-eyebrow"><span class="pnum">06</span> / Real-Time Systems</div>
+          <h3 class="p-title">Multiplayer Game Server</h3>
+          <p class="p-what">A real-time multiplayer game backend that handles matchmaking, move validation, disconnects, rematches, and leaderboards.</p>
+          <p class="p-standout">The server owns every move. Clients can't cheat by changing their local game state.</p>
+          <div class="p-stack">TypeScript · Nakama · WebSockets · PostgreSQL · React · Docker</div>
+          <div class="p-cta">
+            <a class="btn primary" href="https://github.com/27vamsi" target="_blank" rel="noopener">Checkout code ↗</a>
+            <a class="btn ghost" href="https://github.com/27vamsi" target="_blank" rel="noopener">Live demo ↗</a>
+          </div>
+        </article>
+
+        <article class="proj" data-cat="chain">
+          <div class="p-eyebrow"><span class="pnum">07</span> / Blockchain Infrastructure</div>
+          <h3 class="p-title">CLAMM Tick Collector</h3>
+          <p class="p-what">A Solidity system that reads liquidity distribution across concentrated-liquidity pools, including Uniswap V4-style protocols.</p>
+          <p class="p-standout">Gas-bounded liquidity scanning using bitmaps, bitwise math, and low-level Solidity assembly.</p>
+          <div class="p-stack">Solidity · EVM · CLAMM · Fixed-Point Arithmetic</div>
+          <div class="p-cta"><a class="btn primary" href="https://github.com/27vamsi" target="_blank" rel="noopener">Checkout code ↗</a></div>
+        </article>
+
+        <article class="proj" data-cat="chain">
+          <div class="p-eyebrow"><span class="pnum">08</span> / Cross-Chain Infrastructure</div>
+          <h3 class="p-title">Cross-Chain ERC20 Bridge</h3>
+          <p class="p-what">Moves tokens between two blockchains by locking tokens on one chain and issuing their equivalent on another.</p>
+          <p class="p-standout">Validator-signed transfers with nonce-based replay protection, verified across the complete two-chain lifecycle.</p>
+          <div class="p-stack">Solidity · Node.js · Hardhat · Ethers.js · ECDSA</div>
+          <div class="p-cta"><a class="btn primary" href="https://github.com/27vamsi" target="_blank" rel="noopener">Checkout code ↗</a></div>
+        </article>
+
+        <article class="proj" data-cat="chain">
+          <div class="p-eyebrow"><span class="pnum">09</span> / Blockchain Security</div>
+          <h3 class="p-title">Transaction Verification &amp; Monitoring</h3>
+          <p class="p-what">Verifies blockchain transactions using cryptographic proofs and monitors on-chain activity through live event streams.</p>
+          <p class="p-standout">Merkle proofs, multi-signature verification, and batched on-chain checks in one verification pipeline.</p>
+          <div class="p-stack">Python · FastAPI · Solidity · WebSockets · Keccak256</div>
+          <div class="p-cta"><a class="btn primary" href="https://github.com/27vamsi" target="_blank" rel="noopener">Checkout code ↗</a></div>
+        </article>
+
+        <article class="proj" data-cat="ai">
+          <div class="p-eyebrow"><span class="pnum">10</span> / AI &amp; Applied Research</div>
+          <h3 class="p-title">Physics-Informed Fire Forecasting</h3>
+          <p class="p-what">An AI system that detects fires in video and predicts how they may spread using neural networks and heat-transfer physics.</p>
+          <p class="p-standout">98.12% detection accuracy, 94% fewer false alarms, and real-time fire trajectory forecasting.</p>
+          <div class="p-stack">Python · PINNs · YOLOv8 · OpenCV · Kalman Filters</div>
+          <div class="p-cta"><a class="btn primary" href="https://github.com/27vamsi" target="_blank" rel="noopener">Checkout code ↗</a></div>
+        </article>
+
+        <article class="proj" data-cat="ai">
+          <div class="p-eyebrow"><span class="pnum">11</span> / Medical AI</div>
+          <h3 class="p-title">Endoscopic Disease Classification</h3>
+          <p class="p-what">A deep-learning system that analyzes endoscopic images to identify and classify ten different pathological conditions.</p>
+          <p class="p-standout">10 disease classes. 92.3% classification accuracy using an ensemble of specialized neural networks.</p>
+          <div class="p-stack">Python · TensorFlow · CNN · Deep Learning</div>
+          <div class="p-cta"><a class="btn primary" href="https://github.com/27vamsi" target="_blank" rel="noopener">Checkout code ↗</a></div>
+        </article>
+
+        <article class="proj" data-cat="ai">
+          <div class="p-eyebrow"><span class="pnum">12</span> / Computer Vision</div>
+          <h3 class="p-title">Vehicle &amp; Taillight Tracking</h3>
+          <p class="p-what">A computer vision system that tracks vehicles, detects brake lights, and identifies unusual driving behavior from video.</p>
+          <p class="p-standout">Three detection models working together at 30 FPS on 1080p video.</p>
+          <div class="p-stack">Python · YOLOv8 · Computer Vision · Object Tracking</div>
+          <div class="p-cta"><a class="btn primary" href="https://github.com/27vamsi" target="_blank" rel="noopener">Checkout code ↗</a></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="block" id="experience">
+    <div class="wrap">
+      <div class="block-head">
+        <h2>Where I've been</h2>
+      </div>
+      <div class="xp">
+        <div class="xp-row">
+          <div class="xp-when"><span class="now">● Now</span><br>2026 —</div>
+          <div class="xp-body">
+            <h3>Founding Engineer</h3>
+            <div class="org">OneCent Labs</div>
+            <p>Building the backend and infrastructure for a CoW Protocol solver and DEX routing engine: the matching, simulation, and services that search fragmented liquidity to settle trades at the best price.</p>
+            <div class="tags"><span class="tag">Python</span><span class="tag">Async</span><span class="tag">EVM</span><span class="tag">AWS</span><span class="tag">Routing</span></div>
+          </div>
+        </div>
+        <div class="xp-row">
+          <div class="xp-when">Jan 2025 —<br>Feb 2026</div>
+          <div class="xp-body">
+            <h3>Backend Developer</h3>
+            <div class="org">GlueX Protocol</div>
+            <p>Built multi-chain DeFi infrastructure: backend services integrating AMMs, swaps, and bridges across networks, with end-to-end ownership of deployment, testing, uptime, and production maintenance.</p>
+            <div class="tags"><span class="tag">FastAPI</span><span class="tag">Multi-chain</span><span class="tag">Solidity</span><span class="tag">Docker</span><span class="tag">AWS</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section class="block band" id="stack">
+    <div class="wrap">
+      <div class="block-head">
+        <h2>My tech stack</h2>
+      </div>
+      <div class="stack">
+        <div class="stack-col">
+          <h3>Languages</h3>
+          <div class="chips"><span class="chip">Python</span><span class="chip">TypeScript</span><span class="chip">JavaScript</span><span class="chip">C++</span><span class="chip">Solidity</span></div>
+        </div>
+        <div class="stack-col">
+          <h3>Backend &amp; Data</h3>
+          <div class="chips"><span class="chip">FastAPI</span><span class="chip">Django</span><span class="chip">Async systems</span><span class="chip">PostgreSQL</span><span class="chip">Redis</span><span class="chip">Polars / PyArrow</span><span class="chip">Celery</span></div>
+        </div>
+        <div class="stack-col">
+          <h3>Cloud &amp; Infra</h3>
+          <div class="chips"><span class="chip">AWS (ECS / IAM)</span><span class="chip">Docker</span><span class="chip">CDK</span><span class="chip">S3 / MinIO</span><span class="chip">SSE</span><span class="chip">MCP</span></div>
+        </div>
+        <div class="stack-col">
+          <h3>Blockchain &amp; ML</h3>
+          <div class="chips"><span class="chip">EVM</span><span class="chip">Hardhat / Foundry</span><span class="chip">Ethers.js</span><span class="chip">CLAMM / AMM</span><span class="chip">PyTorch</span><span class="chip">TensorFlow</span><span class="chip">YOLOv8</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESEARCH + EDUCATION -->
+  <section class="block" id="writing">
+    <div class="wrap">
+      <div class="block-head">
+        <h2>Published work</h2>
+      </div>
+      <div class="split">
+        <div class="panel">
+          <div class="kicker">Publication · IEEE</div>
+          <h3>A Physics-Informed Computer Vision Framework for Firefighting Assistance</h3>
+          <p>Peer-reviewed research presented at the IEEE 9th International Conference on Information and Communication Technology (CICT), Chennai. Embeds heat-transfer physics into a vision model for fire-spread prediction, carried from model design to a working system.</p>
+          <div class="meta">IEEE CICT · <b>2025</b> · 98.12% accuracy, 0.85 IoU</div>
+        </div>
+        <div class="panel">
+          <div class="kicker">Education</div>
+          <div class="edu-list">
+            <div class="edu-item">
+              <h3>Vellore Institute of Technology</h3>
+              <div class="sub">B.Tech, Computer Science and Engineering · Chennai</div>
+              <div class="yr">Sept 2021 — July 2025</div>
+            </div>
+            <div class="edu-item">
+              <h3>FIITJEE Jr College</h3>
+              <div class="sub">Higher Secondary, PCM</div>
+            </div>
+            <div class="edu-item">
+              <h3>Kendriya Vidyalaya</h3>
+              <div class="sub">Primary &amp; Secondary Education</div>
+              <div class="yr">2008 — 2018</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="block band" id="contact">
+    <div class="wrap contact-inner">
+      <h2>Let's <em>connect</em>.</h2>
+      <p>Open to backend, infrastructure, and founding engineering roles. Happy to talk systems, ideas, or opportunities.</p>
+      <div class="contact-grid">
+        <div class="cc">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          <div class="min"><div class="lab">Email</div><div class="val" id="email">vamsi.027.11@gmail.com</div></div>
+          <button class="copy" data-copy="email">Copy</button>
+        </div>
+        <div class="cc">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8 9.5a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/></svg>
+          <div class="min"><div class="lab">Phone</div><div class="val" id="phone">+91 75500 27299</div></div>
+          <button class="copy" data-copy="phone">Copy</button>
+        </div>
+        <a class="cc" href="https://github.com/27vamsi" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49v-1.7c-2.78.62-3.37-1.37-3.37-1.37-.46-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.9 1.57 2.34 1.12 2.91.85.09-.66.35-1.12.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg>
+          <div class="min"><div class="lab">GitHub</div><div class="val">@27vamsi</div></div>
+        </a>
+        <div class="cc">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.3 18V10H5.7v8h2.6zM7 8.8a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM18.3 18v-4.4c0-2.3-1.2-3.4-2.9-3.4-1.3 0-1.9.7-2.2 1.2V10h-2.6v8h2.6v-4.5c0-1.2.6-1.8 1.4-1.8s1.4.5 1.4 1.8V18h2.3z"/></svg>
+          <div class="min"><div class="lab">LinkedIn</div><div class="val" id="linkedin">Sesha Sai Vamsi</div></div>
+          <button class="copy" data-copy="linkedin">Copy</button>
+        </div>
+      </div>
+      <div style="margin-top:22px;">
+        <a class="btn ghost" href="https://vamsimarella.com" target="_blank" rel="noopener">vamsimarella.com</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span>© 2026 Sesha Sai Vamsi Marella</span>
+    <span>Hyderabad · UTC+5:30</span>
+  </div>
+</footer>
+
+<script>
+  // Theme toggle
+  (function () {
+    var root = document.documentElement, btn = document.getElementById('themeToggle'), icon = document.getElementById('themeIcon');
+    var moon = '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+    var sun = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+    function stored(){ try { return localStorage.getItem('vm-theme'); } catch(e){ return null; } }
+    function save(v){ try { localStorage.setItem('vm-theme', v); } catch(e){} }
+    function isDark(){ var t = root.getAttribute('data-theme'); if (t) return t === 'dark'; return window.matchMedia('(prefers-color-scheme: dark)').matches; }
+    function paint(){ icon.innerHTML = isDark() ? sun : moon; }
+    var s = stored(); if (s === 'dark' || s === 'light') root.setAttribute('data-theme', s);
+    paint();
+    btn.addEventListener('click', function(){ var next = isDark() ? 'light' : 'dark'; root.setAttribute('data-theme', next); save(next); paint(); });
+  })();
+
+  // Copy buttons
+  (function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.copy'), function (b) {
+      b.addEventListener('click', function () {
+        var id = b.getAttribute('data-copy'), el = document.getElementById(id), text = el.textContent.trim();
+        function done(){ var o = b.textContent; b.textContent = 'Copied'; setTimeout(function(){ b.textContent = o; }, 1500); }
+        if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(done, sel); } else { sel(); }
+        function sel(){ var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); done(); }
+      });
+    });
+  })();
+
+  // Project filters
+  (function () {
+    var cards = Array.prototype.slice.call(document.querySelectorAll('.proj'));
+    var counts = { all: cards.length, infra: 0, chain: 0, ai: 0 };
+    cards.forEach(function (c) { counts[c.getAttribute('data-cat')]++; });
+    Object.keys(counts).forEach(function (k) { var e = document.getElementById('n-' + k); if (e) e.textContent = counts[k]; });
+    document.getElementById('filters').addEventListener('click', function (e) {
+      var b = e.target.closest('.filter'); if (!b) return;
+      document.querySelectorAll('.filter').forEach(function (x) { x.classList.remove('active'); });
+      b.classList.add('active');
+      var f = b.getAttribute('data-filter');
+      cards.forEach(function (c) { c.hidden = !(f === 'all' || c.getAttribute('data-cat') === f); });
+    });
+  })();
+
+  // 3D-feeling constellation nav map: rotating point cloud, glowing section nodes
+  (function () {
+    var svg = document.getElementById('constel');
+    if (!svg) return;
+    var NS = 'http://www.w3.org/2000/svg';
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var CX = 300, CY = 294, F = 560;
+
+    // labeled section nodes in 3D (centered coords)
+    var nodes = [
+      { id:'focus',      p:[-182,-156, 34], r:5,   label:"What I Bring",     href:'#focus',      dx:0, dy:-16, anc:'middle', fs:11.5 },
+      { id:'work',       p:[ 14, -182,-26], r:6.5, label:"Things I've Built", href:'#work',      dx:0, dy:-18, anc:'middle', fs:12.5 },
+      { id:'experience', p:[ 200,-104, 28], r:5,   label:"Where I've Been",  href:'#experience', dx:0, dy:-16, anc:'middle', fs:11.5 },
+      { id:'stack',      p:[-168, 78, -34], r:5,   label:"My Tech Stack",    href:'#stack',      dx:0, dy:21,  anc:'middle', fs:11.5 },
+      { id:'research',   p:[ 98,  86,  38], r:5,   label:"Published Work",   href:'#writing',    dx:0, dy:21,  anc:'middle', fs:11.5 },
+      { id:'contact',    p:[-12, 198,  2], r:5,   label:"Let's Connect",    href:'#contact',    dx:0, dy:23,  anc:'middle', fs:11.5 }
+    ];
+    var edgePairs = [
+      ['focus','work'], ['work','experience'], ['work','research'],
+      ['focus','stack'], ['stack','research'], ['experience','research'],
+      ['research','contact'], ['stack','contact'], ['focus','research'], ['experience','contact']
+    ];
+    var byId = {};
+    nodes.forEach(function (n) { n.phase = Math.random() * 6.28; byId[n.id] = n; });
+
+    // decorative depth field
+    var deco = [];
+    for (var i = 0; i < 46; i++) {
+      deco.push({
+        p: [(Math.random()-0.5)*620, (Math.random()-0.5)*560, (Math.random()-0.5)*260],
+        baseR: 0.7 + Math.random() * 1.7,
+        tw: Math.random() * 6.28,
+        tws: 0.6 + Math.random() * 1.6
+      });
+    }
+
+    function rot(p, yaw, pitch) {
+      var cy = Math.cos(yaw), sy = Math.sin(yaw);
+      var x = p[0]*cy + p[2]*sy, z = -p[0]*sy + p[2]*cy, y = p[1];
+      var cx = Math.cos(pitch), sx = Math.sin(pitch);
+      var y2 = y*cx - z*sx, z2 = y*sx + z*cx;
+      return [x, y2, z2];
+    }
+    function proj(r) { var s = F / (F - r[2]); return { x: CX + r[0]*s, y: CY + r[1]*s, s: s }; }
+
+    // build deco
+    var decoEls = deco.map(function (d) {
+      var c = document.createElementNS(NS, 'circle');
+      c.setAttribute('class', 'cdeco'); svg.appendChild(c); return c;
+    });
+    // build edges
+    var edgeEls = edgePairs.map(function (e) {
+      var ln = document.createElementNS(NS, 'line');
+      ln.setAttribute('class', 'cedge'); svg.appendChild(ln);
+      return { el: ln, a: byId[e[0]], b: byId[e[1]] };
+    });
+    // build nodes
+    nodes.forEach(function (n) {
+      var a = document.createElementNS(NS, 'a');
+      a.setAttribute('href', n.href); a.setAttribute('class', 'cnode'); a.setAttribute('aria-label', 'Go to ' + n.label);
+      var halo = document.createElementNS(NS, 'circle'); halo.setAttribute('class', 'halo');
+      var ring = document.createElementNS(NS, 'circle'); ring.setAttribute('class', 'ring');
+      var pt = document.createElementNS(NS, 'circle'); pt.setAttribute('class', 'pt');
+      var tx = document.createElementNS(NS, 'text'); tx.setAttribute('text-anchor', n.anc); tx.setAttribute('font-size', n.fs); tx.textContent = n.label;
+      a.appendChild(halo); a.appendChild(ring); a.appendChild(pt); a.appendChild(tx);
+      svg.appendChild(a);
+      n.halo = halo; n.ring = ring; n.pt = pt; n.tx = tx;
+    });
+
+    function render(t) {
+      var yaw = Math.sin(t * 0.17) * 0.52 + 0.12;
+      var pitch = Math.sin(t * 0.12 + 0.6) * 0.2;
+
+      deco.forEach(function (d, i) {
+        var r = rot(d.p, yaw, pitch), pr = proj(r);
+        var el = decoEls[i];
+        var tw = reduce ? 1 : (0.55 + 0.45 * Math.sin(t * d.tws + d.tw));
+        var depth = Math.max(0, Math.min(1, (pr.s - 0.78) / 0.5));
+        el.setAttribute('cx', pr.x); el.setAttribute('cy', pr.y);
+        el.setAttribute('r', (d.baseR * pr.s).toFixed(2));
+        el.setAttribute('opacity', (0.12 + 0.5 * depth) * tw);
+      });
+
+      nodes.forEach(function (n) {
+        var fl = reduce ? [0,0,0] : [Math.sin(t*0.6+n.phase)*4, Math.cos(t*0.5+n.phase)*4, 0];
+        var r = rot([n.p[0]+fl[0], n.p[1]+fl[1], n.p[2]], yaw, pitch), pr = proj(r);
+        n.sx = pr.x; n.sy = pr.y;
+        var pop = reduce ? 1 : (1 + 0.14 * Math.sin(t * 1.6 + n.phase));
+        var core = n.r * pr.s;
+        n.pt.setAttribute('cx', pr.x); n.pt.setAttribute('cy', pr.y); n.pt.setAttribute('r', (core).toFixed(2));
+        n.ring.setAttribute('cx', pr.x); n.ring.setAttribute('cy', pr.y); n.ring.setAttribute('r', (core + 4).toFixed(2));
+        n.halo.setAttribute('cx', pr.x); n.halo.setAttribute('cy', pr.y); n.halo.setAttribute('r', (core * 4.2 * pop).toFixed(2));
+        n.tx.setAttribute('x', (pr.x + n.dx).toFixed(2)); n.tx.setAttribute('y', (pr.y + n.dy).toFixed(2));
+      });
+
+      edgeEls.forEach(function (e) {
+        e.el.setAttribute('x1', e.a.sx); e.el.setAttribute('y1', e.a.sy);
+        e.el.setAttribute('x2', e.b.sx); e.el.setAttribute('y2', e.b.sy);
+      });
+    }
+
+    render(0);
+    if (!reduce) {
+      var t0 = null;
+      function frame(ts) { if (!t0) t0 = ts; render((ts - t0) / 1000); requestAnimationFrame(frame); }
+      requestAnimationFrame(frame);
+    }
+  })();
+</script>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=Spline+Sans+Mono:wght@400;500;600&display=swap">
